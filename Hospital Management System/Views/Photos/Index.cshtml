@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div class="photo-list row">
+
+</div>
+
+<nav aria-label="Page navigation">
+    <ul class="pagination">
+        <li>
+            <a href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li><a href="#">1</a></li>
+        @*<li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>*@
+        <li>
+            <a href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+@section scripts{
+    <script>
+        $(function () {
+            var photolist = $(".photo-list");
+            var pagination = $(".pagination");
+            var page = 0;
+            var size = 12;
+            var totalSize = 0;
+            var totalPage = 0;
+
+
+
+
+
+
+            $.ajax({
+                url: "http://jsonplaceholder.typicode.com/photos",
+                method: "GET",
+                success: function (result) {
+                    for (var i = 0; i < size; i++) {
+                        photolist.append(
+                            "<div class='col-sm-6 col-md-3'>" +
+                            "   <div class='thumbnail'>" +
+                            "       <img src=" + result[i].thumbnailUrl + ">" +
+                            "       <div class='caption'>" +
+                            "           <h3>" + result[i].title + "</h3>" +
+                            "           <p><a href='#' class='btn btn-primary' role='button'>Button</a></p>" +
+                            "       </div>" +
+                            "   </div>" +
+                            "</div>"
+
+                            );
+                    }
+
+                    totalSize = result.length;
+                    totalPage = totalSize / size;
+                    console.log("result.length: " + result.length);
+                    console.log("totalPage: " + totalPage);
+                    //totalPage += totalSize % size;
+                    for (var j = 0; j < totalPage; j++) {
+                        pagination.append(
+                            "<li><a href='#'>" + j + "</a></li>"
+                            );
+                    }
+                    
+                }
+
+            });
+
+        })
+    </script>
+}

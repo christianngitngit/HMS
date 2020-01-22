@@ -1,0 +1,115 @@
+﻿/*
+
+body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 100%;
+    width: 100%;
+}
+
+
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+
+div.home {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.home.main {
+    background-image: url('Images/building_facade.jpg');
+    height: 400px;
+    opacity: 0.4;
+}
+
+.home.services {
+    background-image: none;
+    background-color:cornsilk rgb(128, 128, 128);
+    height: 400px;
+    
+}
+
+
+span.delete-btn {
+    color: #f04949;
+}
+
+table.display {
+    width: 100%;
+}
+
+table .paginate_button a{
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+*/
+
+.main-content {
+    /*display: flex;*/
+    height: 100vh;
+    width: 100vw;
+   
+}
+
+.content {
+    background-color: #f2f2f2;
+}
+
+.button-margin {
+    margin: 2px;
+}
+
+.table-margin {
+    margin: 5px;
+}
+
+.paginate_button {
+    margin: 5px;
+}
+
+.form-control-inline {
+    min-width: 0;
+    width: auto;
+    display: inline;
+}
+
+.loader {
+    border: 3px solid blue;
+    border-top: 3px solid grey;
+    border-bottom: 3px solid grey;
+    border-radius: 25px;
+    width:  50px;
+    height: 50px;
+    position: absolute;
+    transform: translate(50%, 50%);
+    animation: 2s linear animateLoader infinite;
+}
+
+.navbar-custom-menu {
+    margin-right: 20px;
+}
+@keyframes  animateLoader {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

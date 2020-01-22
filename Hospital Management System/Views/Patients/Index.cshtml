@@ -1,0 +1,187 @@
+﻿@model IEnumerable<HMS.Models.Patient>
+
+@{
+    ViewBag.Title = "Patient List";
+}
+
+<h2>Patients</h2>
+
+@*<input type="text" id="txtPatient" />
+<button onclick="SearchPatient()">Search</button>*@
+
+
+<div class="row">
+    <div class="col-md-4">
+        <a class="btn btn-default" href="/patients/PatientForm">Add New <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+        <a class="btn btn-default">Refresh <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+    </div>
+
+</div>
+
+<table id="patients" class="table table-bordered table-striped">
+    @*table table-hover*@
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            @*<th>Lastname</th>*@
+            <th>Birthdate</th>
+            <th>Gender</th>
+            <th>Option</th>
+        </tr>
+    </thead>
+    <tbody>
+        @*@foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Firstname</td>
+                    <td>@item.Lastname</td>
+                    <td>@item.Birthdate.ToString("MM/dd/yyyy")</td>
+                    <td>@item.Gender</td>
+                </tr>
+
+            }*@
+    </tbody>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            //$('#patients').DataTable({
+            //    ajax: {
+            //        url: "http://localhost:54894/api/Patients",
+            //        method: "GET",
+            //        dataType: "json",
+            //        contentType: 'application/json; charset=utf-8',
+            //        data: "dataset",
+            //        columns: [
+            //        {
+            //            data: "id"
+            //        },
+            //        {
+            //            data: "firstname"
+            //            //render: function (data, datatype, patient) {
+            //            //    return "<a href='/patients/" + patient.id + "'>" + patient.lastname + ", " + patient.firstname + "</a>"
+            //            //}
+            //        },
+            //        {
+            //            data: "birthdate"
+            //        },
+            //        {
+            //            data: "gender"
+            //        },
+            //        {
+            //            data: "id"
+            //            //render: function (data) {
+            //            //    //return "<a class='delete-btn' data-patient-id=" + data +"><span class='glyphicon glyphicon-remove'></span></a>"
+            //            //    //return "<span class='glyphicon glyphicon-trash delete-btn' data-patient-id=" + data + "></span>"
+            //            //}
+            //        }
+            //        ]
+
+
+            //    }
+            //});
+            /*var table = $("#patients").DataTable({
+                paging: true,
+                //pagingType: "full_numbers",
+                searching: true,
+                ordering: true,
+                ajax: {
+                    url: "/api/patients/",
+                    method: "GET",
+                    //dataSrc: "",
+                    //contentType: "application/json"
+                    dataType: "json"
+                },
+                columns: [
+
+                    {
+                        data: "id"
+                    },
+                {
+                    data: "firstname",
+                    render: function (data, datatype, patient) {
+                        return "<a href='/patients/" + patient.id + "'>" + patient.lastname + ", " + patient.firstname + "</a>"
+                    }
+                },
+                {
+                    data: "birthdate"
+                },
+                {
+                    data: "gender"
+                },
+                {
+                    data: "id",
+                    render: function (data) {
+                        //return "<a class='delete-btn' data-patient-id=" + data +"><span class='glyphicon glyphicon-remove'></span></a>"
+                        return "<span class='glyphicon glyphicon-trash delete-btn' data-patient-id=" + data + "></span>"
+                    }
+                }
+                ]
+            });*/
+
+            $("#patients").on("click", ".delete-btn", function () {
+                var button = $(this);
+                console.log(button.attr("data-patient-id"));
+            })
+
+
+
+            $.ajax({
+                url: "http://localhost:54894/api/Patients",
+                method: "GET",
+                success: function (result, status) {
+                    //for (var i = 0; i < result.length; i++) {
+                    //    $("table").append(
+                    //        "<tr>" +
+                    //        "<td>" + result[i].firstname + "</td>" +
+                    //        "<td>" + result[i].lastname + "</td>" +
+                    //        "<td>" + result[i].birthdate + "</td>" +
+                    //        "<td>" + result[i].gender + "</td>" +
+                    //        "</tr>");
+                    //}
+
+                    console.log(result);
+                    $("#patients").DataTable({
+                        data: result,
+                        columns: [
+                            { data: "id" },
+                            { data: "firstname" },
+                            { data: "birthdate" },
+                            { data: "gender" },
+                            {
+                                data: "id",
+                                render: function (data) {
+                                    return "<a href='#' class='btn btn-primary'><i class='fa fa-pencil-square-o'></i> Edit </a> <a href='#' class='btn btn-danger'><i class='fa fa-trash-o'></i> Delete</a> "
+                                }
+                            }
+                        ],
+                        aaSorting: [[1, "asc"]],
+                        columnDefs: [{
+                            targets: 4,
+                            orderable: false
+                        }],
+                        scrollY: "200px",
+                        lengthMenu: [[-1, 5, 10, 20, 50, 100], ["All", 5, 10, 20, 50, 100]]
+                    });
+                }
+            });
+        })
+
+        function SearchPatient() {
+            $.ajax({
+                url: "/api/patients/" + $("#txtPatient").val(),
+                method: "GET",
+                dataType: "json",
+                success: function (result) {
+                    console.log("Success");
+                    console.log(result);
+                },
+                error: function (resp) {
+                    console.log(resp);
+                }
+            });
+        }
+    </script>
+}

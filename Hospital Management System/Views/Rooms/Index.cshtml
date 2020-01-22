@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "List of Rooms";
+
+}
+<h1>Rooms</h1>
+
+<a class="btn btn-primary button-margin" href="/rooms/roomform">Add Room</a>
+
+<table id="roomTable" class="table table-bordered table-margin">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Room Number</th>
+            <th>Room Type</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Options</th>
+        </tr>
+    </thead>
+</table>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var table = $('#roomTable').DataTable({
+                ajax: {
+                    url: "/api/rooms",
+                    dataSrc: "",
+                },
+                columns: [
+                    {
+                        data: "id"
+                    },
+                    {
+                        data: "roomNo"
+                    },
+                    {
+                        data: "roomType.roomTypeDescription"
+                    },
+                    {
+                        data: "price"
+                    },
+                    {
+                        data: "occupancyStatus.status"
+                    },
+                    {
+                        data: "id",
+                        render: function (data) {
+                            //return "<button class='btn btn-primary edit-room' edit-room-id=" + data + ">Edit</button>";
+                            return "<a class='btn btn-primary button-margin edit-room' href='/rooms/roomform/" + data + "'>Edit</a><button class='btn btn-danger button-margin delete-room' delete-room-id=" + data + ">Delete</button>";
+                            //<button class='btn btn-error' data-room-id='" + data + "'>Delete</button>";
+                        }
+                    }
+                ],
+
+            });
+
+            $("#roomTable").on("click", ".edit-room", function () {
+                let button = $(this);
+                console.log(button.attr("edit-room-id"));
+                //'/rooms/roomform/'
+            });
+
+            $("#roomTable").on("click", ".delete-room", function () {
+                let button = $(this);
+                console.log(button.attr("delete-room-id"));
+            });
+        });
+
+    </script>
+}

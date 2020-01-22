@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "Room Form";
+}
+
+@*<div class="container">*@
+
+
+    <div class="row">
+
+
+        <div class="form-group col-md-6">
+            <label class="control-label">Room ID</label>
+            <input type="text" id="roomId" disabled value="" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label class="control-label">Room No</label>
+            <input type="text" id="roomNo" value="" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label class="control-label" for="roomType">Room Type</label>
+            <select id="roomType" class="form-control"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label class="control-label" for="occupancyStatus">Status</label>
+            <select id="occupancyStatus" class="form-control"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-6">
+            <label class="control-label">Price</label>
+            
+            <div class="input-group">
+                <div class="input-group-addon">P</div>
+                <input type="text" id="price" value="" class="form-control" />
+                <div class="input-group-addon">.00</div>
+            </div>
+        </div>
+    </div>
+    <div class="btn-group btn-group-vertical">
+        <button class="btn btn-primary" onclick="saveRoom()">Save Record</button>
+        <button class="btn btn-warning">Cancel</button>
+    </div>
+@*<div class="loader">
+
+</div>*@
+@*</div>*@
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "/api/rooms/" + @ViewBag.Id,
+                method: "GET",
+                success: function (data) {
+                    setOccupancy(data.occupancyStatus);
+                    setRoomType(data.roomTypes);
+                    setData(data);
+                }
+            });
+
+
+        });
+
+        function setOccupancy(occupancies){
+            occupancies.forEach(function(element){
+                $('#occupancyStatus').append("<option value='" + element.id + "'>" +  element.status +"</option>");
+            });
+        }
+
+        function setRoomType(roomTypes){
+            roomTypes.forEach(function(element){
+                $('#roomType').append("<option value='" + element.id + "'>" +  element.roomTypeDescription +"</option>");
+            });
+        }
+
+        function setData(room){
+            $("#roomId").val(room.id);
+            $("#roomNo").val(room.roomNo);
+            $("#price").val(room.price);
+            $("#occupancyStatus").value = room.occupancyStatusId;
+            $("#roomType").value = room.roomTypeId;
+
+        }
+
+        function saveRoom(){
+            var vm = {
+                id: $("#roomId").val(),
+                roomNo : $("#roomNo").val(),
+                price : $("#price").val(),
+                occupancyStatusId : $("#occupancyStatus").val(),
+                roomTypeId : $("#roomType").val()
+            }
+
+            console.log(vm);
+            if (vm.id == "0"){
+                $.ajax({
+                    url: "/api/rooms",
+                    method: "POST",
+                    data: vm,
+                    success: function(data){
+                        toastr.success("Record saved.");
+                    },
+                    error: function(data){
+                        toastr.error(data);
+                    
+                    }
+                });
+            }
+            else{
+                $.ajax({
+                    url: "/api/rooms",
+                    method: "PUT",
+                    data: vm,
+                    success: function(data){
+                        toastr.success("Record saved.");
+                    },
+                    error: function(data){
+                        toastr.error(data);
+                        console.log(data);
+                    
+                    }
+                });
+            
+            }
+        }
+    </script>
+}

@@ -1,0 +1,107 @@
+﻿@model HMS.Models.Doctor
+
+@{
+    ViewBag.Title = "Doctor's Form";
+}
+
+<h2>Create</h2>
+
+
+<form>
+    <div class="form-group">
+        <label class="control-label" for="recid">ID</label>
+        <input type="text" id="recid" value=@ViewBag.Id class="form-control" />
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="firstname">Firstname</label>
+        <input type="text" id="firstname" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label class="control-label" for="lastname">Lastname</label>
+        <input type="text" id="lastname" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label" for="specialization">Specialization</label>
+        <div class="col-md-5">
+            <select id="specialization" class="form-control">
+                @*<option value="0">Ortho</option>
+                <option value="1">Pedia</option>
+                <option value="2">Surgery</option>*@
+            </select>
+        </div>
+    </div>
+
+    <div>
+        <button class="btn btn-primary" type="button" onclick="Save()">Save</button>
+        <button class="btn btn-danger" type="button">Cancel</button>
+    </div>
+    
+
+</form>
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    <script>
+        let recid = @ViewBag.Id;
+        let fname = $('#firstname');
+        let lname = $('#lastname');
+        let specialization = $('#specialization');
+
+        $(document).ready(function () {
+            //recid = $('#recid');
+            $.ajax({
+                url: "/api/Specializations",
+                method: "GET",
+                success: function (data, status) {
+                    data.forEach(function (element) {
+                        specialization.append("<option value='" + element.id + "'>" + element.name + "</option>");
+                    });
+
+                }
+            });
+
+            $.ajax({
+                url: "/api/doctors/" + recid,
+                method: "GET",
+                success: function (data, status, doctor) {
+                    console.log(doctor);
+                    fname.val(doctor.firstname);
+                    lname.val(doctor.lastname);
+                }
+
+            });
+        })
+
+        function Save() {
+
+            var doctor = {
+                firstname: fname.val(),
+                lastname: lname.val(),
+                specializationId: specialization.val()
+            };
+
+            console.log(doctor);
+            //console.log(lname.val());
+            //console.log(specialization.val());
+            $.ajax({
+                url: "/api/doctors",
+                method: "POST",
+                data: doctor,
+                success: function (data) {
+                    toastr.success("Record saved!");
+                    console.log(data);
+                },
+                error: function (data) {
+                    toastr.error("Error encountered!");
+                    console.log(data);
+
+                }
+            });
+        }
+    </script>
+}

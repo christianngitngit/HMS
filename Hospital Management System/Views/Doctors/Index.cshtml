@@ -1,0 +1,104 @@
+﻿@model IEnumerable<HMS.Models.Doctor>
+
+@{
+    ViewBag.Title = "Doctors";
+}
+
+
+
+<h2>List Of Doctors</h2>
+
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<button class="btn btn-primary" onclick="refresh()">Refresh</button>
+<div style="padding: 10px; margin: 10px;">
+    <table id="doctors" class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Specialization</th>
+            </tr>
+        </thead>
+
+    </table>
+</div>
+
+
+@section scripts{
+    <script>
+        var doctorsTable;
+
+        $(document).ready(function () {
+            doctorsTable = $("#doctors").DataTable({
+                ajax: {
+                    url: "/api/doctors",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "id",
+                        render: function (data, type, doctor) {
+                            return "<button class='btn btn-danger js-delete' data-doctor-id=" + data + ">Delete</button> <a class='btn btn-primary' href='/doctors/doctorsform/" + data + "'>Edit</a>"
+                        }
+                    },
+                    {
+                        data: "firstname"
+                        //render: function (data, type, doctor) {
+                        //    return "<a class='btn btn-primary' href='/doctors/details/" + doctor.id + "'>" + doctor.firstname + " " + doctor.lastname + "</a>"
+                        //}
+                    },
+                    {
+                        data: "lastname"
+                        //render: function (data, type, doctor) {
+                        //    return "<a class='btn btn-primary' href='/doctors/details/" + doctor.id + "'>" + doctor.firstname + " " + doctor.lastname + "</a>"
+                        //}
+                    },
+                    {
+                        data: "specialization.name"
+                    }
+                ]
+                ,
+                pagingType: "numbers",
+                aaSorting: [[1, "asc"]],
+                scrollY: "200px",
+                columnDefs: [{
+                    targets: 0,
+                    orderable: false
+                }],
+                lengthMenu: [[-1, 5, 10, 20, 50, 100], ["All", 5, 10, 20, 50, 100]]
+
+            });
+        })
+
+        $("#doctors").on("click", ".js-delete", function () {
+            var button = $(this)
+            bootbox.confirm("Delete record?", function (data) {
+                if (data) {
+                    //button.parents('tr').remove();
+                    doctorsTable.row(button.parents('tr')).remove().draw();
+                    toastr.success("Successfully deleted record");
+                    //toastr["success"]("<div><input class='input-small' value='textbox'/>&nbsp;<a href='http://johnpapa.net' target='_blank'>This is a hyperlink</a></div><div><button type='button' id='okBtn' class='btn btn-primary'>Close me</button><button type='button' id='surpriseBtn' class='btn' style='margin: 0 8px 0 8px'>Surprise me</button></div>")
+                }
+                else {
+                    toastr.warning("Delete cancelled.");
+                }
+            });
+
+            $("#doctors").on("click", ".js-edit", function () {
+                var button = $(this);
+
+
+            });
+
+        })
+
+        function refresh() {
+            doctorsTable.ajax.reload();
+            console.log("refresh");
+        }
+    </script>
+}
